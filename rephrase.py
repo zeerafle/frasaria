@@ -5,15 +5,6 @@ from parrot import Parrot
 import warnings
 warnings.filterwarnings("ignore")
 
-rephaser = Blueprint(
-    name='rephrase',
-    import_name=__name__,
-    url_prefix='/rephrase'
-)
-
-
-
-
 def detect_language(phrase: str):
     return single_detection(phrase, api_key=config.DETECT_LANG_API)
 
@@ -25,12 +16,19 @@ def split_sentences(text: str):
 
 def paraphrase(parrot, phrases):
     # TODO: figure out how to run this line once
-    para_phrases = parrot.augment(phrases, max_return_phrases=1)
-    return para_phrases
+    para_phrases = parrot.augment(phrases, max_return_phrases=10)
+    max_score = 0
+    paraphrased = para_phrases[0][0]
+    for para_phrase in para_phrases:
+        score = para_phrase[-1]
+        if score > max_score:
+            max_score = score
+            paraphrased = para_phrase[0]
+    return paraphrased
 
 if __name__ == '__main__':
-    # parrot = Parrot(model_tag="prithivida/parrot_paraphraser_on_T5")
-    parrot = Parrot()
+    parrot = Parrot(model_tag="prithivida/parrot_paraphraser_on_T5")
+    # parrot = Parrot()
     phrase = input('Masukan frasa: ')
     phrase = phrase.replace('"', "'")
     phrases = split_sentences(phrase)[:-1]
