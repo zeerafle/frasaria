@@ -22,7 +22,7 @@ def split_sentences(text: str):
     return [sentence.strip() for sentence in text.split('.')]
 
 def paraphrase(parrot, phrases):
-    para_phrases = parrot.augment(phrases, max_return_phrases=10)
+    para_phrases = parrot.augment(phrases, max_return_phrases=10, do_diverse=True)
     max_score = 0
     paraphrased = para_phrases[0][0]
     for para_phrase in para_phrases:
